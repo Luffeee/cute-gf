@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React, { useState } from 'react';
 
 interface PicturesCardProps {
@@ -20,9 +21,11 @@ const PicturesCard: React.FC<PicturesCardProps> = ({ onClose }) => {
         <div className="flex justify-center">
           <div className="grid grid-cols-3 gap-x-12 gap-y-1">
             {pictures.map((picture, index) => (
-              <img
+              <Image
                 key={index}
                 src={picture}
+                width={96}
+                height={96}
                 alt={`Picture ${index + 1}`}
                 className="w-24 h-24 object-cover rounded border-4 border-pink-300 shadow cursor-pointer hover:opacity-80 transition"
                 onClick={() => setSelectedImage(picture)} 
@@ -43,7 +46,7 @@ const PicturesCard: React.FC<PicturesCardProps> = ({ onClose }) => {
 
       {selectedImage && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-50">
-          <img src={selectedImage} alt="Selected" className="max-w-full max-h-full rounded shadow-lg" />
+          <Image height={600} width={800} src={selectedImage} alt="Selected" className="max-w-full max-h-full rounded shadow-lg" />
           <button
             onClick={handleCloseModal}
             className="absolute top-4 right-4 bg-white text-black px-4 py-2 rounded-full shadow hover:bg-gray-300 transition"

@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import Keypad from './Keypad';
 import TimeDisplay from './TimeDisplay';
+import Image from 'next/image';
 
 const PasscodeCard: React.FC = () => {
   const [passcode, setPasscode] = useState('');
@@ -52,9 +53,11 @@ const PasscodeCard: React.FC = () => {
     <div className="flex items-center justify-center min-h-screen relative z-10">
       <div className="bg-yellow-100 p-6 rounded-lg shadow-lg w-80 bg-opacity-80">
         <div className="flex justify-center mb-4">
-          <img
+          <Image
             src="/img/img1.jpg"
             alt="ily"
+            width={128} 
+            height={128} 
             className="w-32 h-32 rounded-full border-2 border-pink-400"
           />
         </div>
