@@ -17,7 +17,7 @@ const PicturesCard: React.FC<PicturesCardProps> = ({ onClose }) => {
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl">
         <h2 className="text-xl font-bold mb-4 text-center">📸 Our Memories 📸</h2>
-        
+
         <div className="flex justify-center">
           <div className="grid grid-cols-3 gap-x-12 gap-y-1">
             {pictures.map((picture, index) => (
@@ -28,7 +28,7 @@ const PicturesCard: React.FC<PicturesCardProps> = ({ onClose }) => {
                 height={96}
                 alt={`Picture ${index + 1}`}
                 className="w-24 h-24 object-cover rounded border-4 border-pink-300 shadow cursor-pointer hover:opacity-80 transition"
-                onClick={() => setSelectedImage(picture)} 
+                onClick={() => setSelectedImage(picture)}
               />
             ))}
           </div>
@@ -45,14 +45,24 @@ const PicturesCard: React.FC<PicturesCardProps> = ({ onClose }) => {
       </div>
 
       {selectedImage && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-50">
-          <Image height={600} width={800} src={selectedImage} alt="Selected" className="max-w-full max-h-full rounded shadow-lg" />
-          <button
-            onClick={handleCloseModal}
-            className="absolute top-4 right-4 bg-white text-black px-4 py-2 rounded-full shadow hover:bg-gray-300 transition"
-          >
-            ✖
-          </button>
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-50 p-4">
+          <div className="relative max-w-full max-h-full w-full h-full flex items-center justify-center">
+            <Image
+              src={selectedImage}
+              alt="Selected"
+              layout="intrinsic"
+              width={800}
+              height={600}
+              className="object-contain rounded shadow-lg max-w-full max-h-full"
+            />
+            {/* X button */}
+            <button
+              onClick={handleCloseModal}
+              className="absolute top-4 right-4 z-10 bg-white text-black px-4 py-2 rounded-full shadow hover:bg-gray-300 transition"
+            >
+              ✖
+            </button>
+          </div>
         </div>
       )}
     </div>
