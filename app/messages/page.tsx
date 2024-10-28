@@ -31,16 +31,33 @@ const MessagesPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
+    // Convert the input `time` to a Date object
+    const displayDate = new Date(time);
+    const currentDateTime = new Date();
+    
+    // Check if the display time is in the future
+    if (displayDate <= currentDateTime) {
+      setStatus('⚠️ Display time must be in the future.');
+      return;
+    }
+  
+    // Create the message object
+    const newMessage = {
+      message,
+      displayTime: displayDate.toISOString(), // Use ISO format for consistency
+      createdAt: currentDateTime.toISOString(),
+    };
+  
     try {
       const response = await fetch('/api/messages', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ message, displayTime: time, createdAt: new Date().toISOString()}),
+        body: JSON.stringify(newMessage),
       });
-
+  
       if (response.ok) {
         setStatus('Message scheduled successfully!');
         setMessage('');
@@ -55,6 +72,7 @@ const MessagesPage: React.FC = () => {
       setStatus('An error occurred. Please try again.');
     }
   };
+  
 
   const toggleExpandMessage = (index: number) => {
     setExpandedMessages((prev) => ({ ...prev, [index]: !prev[index] }));
@@ -171,7 +189,9 @@ const MessagesPage: React.FC = () => {
             </button>
           </form>
           {status && (
-            <p className="mt-4 text-center text-green-600 font-medium">{status}</p>
+            <p className={`mt-4 text-center font-medium ${status.includes('⚠️') ? 'text-red-600' : 'text-green-600'}`}>
+            {status}
+          </p>
           )}
         </section>
       </div>
