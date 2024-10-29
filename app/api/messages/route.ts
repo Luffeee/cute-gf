@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
+import { db } from '../../../firebaseConfig';
+import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
 
 interface Message {
   message: string;
@@ -8,36 +8,28 @@ interface Message {
   createdAt: string;
 }
 
-const messagesFilePath = path.join(process.cwd(), 'messages.json');
-
-const readMessages = (): Message[] => {
-  try {
-    const data = fs.readFileSync(messagesFilePath, 'utf-8');
-    return JSON.parse(data) as Message[];
-  } catch (error) {
-    console.error("Error reading messages:", error);
-    return [];
-  }
-};
-
-const writeMessages = (messages: Message[]) => {
-  fs.writeFileSync(messagesFilePath, JSON.stringify(messages, null, 2));
-};
-
 export async function POST(request: Request) {
   const { message, displayTime, createdAt }: Message = await request.json();
-
-  const messages = readMessages();
-  const newMessage: Message = { message, displayTime, createdAt }; 
-  messages.push(newMessage);
-  writeMessages(messages);
-  
-  return NextResponse.json({ success: true });
+  try {
+    const newMessage = { message, displayTime, createdAt };
+    await addDoc(collection(db, 'messages'), newMessage);
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Error adding document:", error);
+    return NextResponse.json({ success: false });
+  }
 }
 
 export async function GET() {
-  const messages = readMessages();
-  const currentMessages = messages.filter((msg) => new Date(msg.displayTime) <= new Date());
-  
-  return NextResponse.json(currentMessages);
+  try {
+    const messagesRef = collection(db, 'messages');
+    const q = query(messagesRef, where('displayTime', '<=', new Date().toISOString()));
+    const querySnapshot = await getDocs(q);
+
+    const messages = querySnapshot.docs.map((doc) => doc.data() as Message);
+    return NextResponse.json(messages);
+  } catch (error) {
+    console.error("Error fetching documents:", error);
+    return NextResponse.json([]);
+  }
 }
