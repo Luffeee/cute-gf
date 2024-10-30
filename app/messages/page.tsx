@@ -149,7 +149,7 @@ const MessagesPage: React.FC = () => {
                   <p>Displayed on: {new Date(msg.displayTime).toLocaleString()}</p>
                 </div>
                 <div className="absolute bottom-2 right-2 text-xs text-gray-400 font-mono">
-                  {elapsedTimes[index]}
+                  {elapsedTimes[Object.keys(elapsedTimes).length - index - 1]}
                 </div>
               </li>
             ))}
